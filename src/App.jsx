@@ -44,7 +44,7 @@ export default function App() {
 
         <img
           src=\"https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=1200&auto=format&fit=crop"
-          alt=\"love\"
+          alt="love"
           style={{
             width:'220px',
             height:'220px',
