@@ -1,75 +1,12 @@
 import { useState } from 'react'
+import CountdownCanvas from './CountdownCanvas'
 
 export default function App() {
   const [opened, setOpened] = useState(false)
   const [night, setNight] = useState(false)
-  const [showBig520, setShowBig520] = useState(false)
 
   if (night) {
-    return (
-      <div
-        style={{
-          background: 'black',
-          color: 'white',
-          width: '100vw',
-          height: '100vh',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          flexDirection: 'column',
-          overflow: 'hidden',
-          position: 'relative'
-        }}
-      >
-        <div className="matrix">
-          {Array.from({ length: 320 }).map((_, i) => (
-            <span
-              key={i}
-              style={{
-                left: `${Math.random() * 100}%`,
-                animationDuration: `${2 + Math.random() * 4}s`,
-                animationDelay: `${Math.random() * 3}s`,
-                color: Math.random() > 0.5 ? '#ff4f87' : '#00ff99'
-              }}
-            >
-              {['5', '2', '0'][Math.floor(Math.random() * 3)]}
-            </span>
-          ))}
-        </div>
-
-        {showBig520 && (
-          <div
-            style={{
-              fontSize: '120px',
-              fontWeight: 'bold',
-              letterSpacing: '14px',
-              zIndex: 2,
-              animation: 'big520 2s ease',
-              textShadow: `
-                0 0 20px #ff4f87,
-                0 0 40px #ff4f87,
-                0 0 80px #ff4f87
-              `,
-              color: '#fff'
-            }}
-          >
-            520
-          </div>
-        )}
-
-        <div
-          style={{
-            marginTop: '20px',
-            color: '#ff4f87',
-            opacity: 0.9,
-            zIndex: 2,
-            letterSpacing: '2px'
-          }}
-        >
-          小比熊正在准备最后的惊喜 ✨
-        </div>
-      </div>
-    )
+    return <CountdownCanvas />
   }
 
   return (
@@ -218,13 +155,7 @@ export default function App() {
             </p>
 
             <button
-              onClick={() => {
-                setNight(true)
-
-                setTimeout(() => {
-                  setShowBig520(true)
-                }, 5000)
-              }}
+              onClick={() => setNight(true)}
               style={{
                 marginTop: '30px',
                 border: 'none',
