@@ -17,12 +17,6 @@ export default function App() {
         position: 'relative',
       }}
     >
-      {opened && (
-        <div className="hearts">
-          ❤️ ❤️ ❤️ ❤️ ❤️ ❤️ ❤️
-        </div>
-      )}
-
       <div
         style={{
           background: 'rgba(255,255,255,0.82)',
