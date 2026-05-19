@@ -75,10 +75,11 @@ body {
 .matrix span {
   position: absolute;
   top: -10%;
-  font-size: 24px;
+  font-size: 18px;
   font-weight: bold;
   animation: matrixFall linear infinite;
-  opacity: 0.75;
+  opacity: 0.9;
+  text-shadow: 0 0 10px currentColor;
 }
 
 @keyframes matrixFall {
