@@ -28,7 +28,10 @@ export default function CountdownCanvas() {
 
     // 🎵 音乐控制（点击触发）
     const startAudio = () => {
-      audioRef.current?.play().catch(() => {})
+      if (audioRef.current) {
+        audioRef.current.volume = 0.4
+        audioRef.current.play().catch(() => {})
+      }
     }
 
     window.addEventListener('click', startAudio)
