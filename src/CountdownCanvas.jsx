@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 
 export default function CountdownCanvas() {
   const canvasRef = useRef(null)
+  const audioRef = useRef(null)
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -24,6 +25,14 @@ export default function CountdownCanvas() {
     let exploded = false
 
     let lastFirework = Date.now()
+
+    // 🎵 音乐控制（点击触发）
+    const startAudio = () => {
+      audioRef.current?.play().catch(() => {})
+    }
+
+    window.addEventListener('click', startAudio)
+    window.addEventListener('touchstart', startAudio)
 
     function createTargetPoints(number) {
       offCtx.clearRect(0, 0, offCanvas.width, offCanvas.height)
@@ -113,7 +122,7 @@ export default function CountdownCanvas() {
       ctx.fillStyle = 'rgba(0,0,0,0.28)'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-      // ========= 数字阶段 =========
+      // ========= 倒计时阶段 =========
       if (!exploded) {
         particles.forEach((p) => {
           p.x += (p.tx - p.x) * 0.06
@@ -130,8 +139,6 @@ export default function CountdownCanvas() {
 
           if (currentNumber <= 0) {
             exploded = true
-
-            // 👉 第一次烟花：正中间
             createFireworks(canvas.width / 2, canvas.height / 2)
           } else {
             createTargetPoints(currentNumber)
@@ -143,7 +150,7 @@ export default function CountdownCanvas() {
 
       // ========= 烟花阶段 =========
       else {
-        // 👉 持续随机烟花
+        // 🎆 随机持续烟花
         if (Date.now() - lastFirework > 650) {
           fireworks.push(
             ...createSingleFirework(
@@ -201,18 +208,30 @@ export default function CountdownCanvas() {
 
     return () => {
       window.removeEventListener('resize', resize)
+      window.removeEventListener('click', startAudio)
+      window.removeEventListener('touchstart', startAudio)
     }
   }, [])
 
   return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        width: '100vw',
-        height: '100vh',
-        display: 'block',
-        background: 'black'
-      }}
-    />
+    <>
+      {/* 🎧 BGM */}
+      <audio
+        ref={audioRef}
+        src="/bgm.mp3"
+        loop
+      />
+
+      {/* 🎇 Canvas */}
+      <canvas
+        ref={canvasRef}
+        style={{
+          width: '100vw',
+          height: '100vh',
+          display: 'block',
+          background: 'black'
+        }}
+      />
+    </>
   )
 }
