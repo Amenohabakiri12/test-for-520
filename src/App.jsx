@@ -16,27 +16,47 @@ export default function App() {
           justifyContent: 'center',
           alignItems: 'center',
           flexDirection: 'column',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          position: 'relative'
         }}
       >
+        <div className="matrix">
+          {Array.from({ length: 120 }).map((_, i) => (
+            <span
+              key={i}
+              style={{
+                left: `${Math.random() * 100}%`,
+                animationDuration: `${3 + Math.random() * 5}s`,
+                animationDelay: `${Math.random() * 5}s`,
+                color: Math.random() > 0.5 ? '#ff4f87' : '#00ff99'
+              }}
+            >
+              {['5', '2', '0'][Math.floor(Math.random() * 3)]}
+            </span>
+          ))}
+        </div>
+
         <div
           style={{
-            fontSize: '28px',
-            letterSpacing: '6px',
-            animation: 'fadeIn 2s ease'
+            fontSize: '72px',
+            fontWeight: 'bold',
+            letterSpacing: '10px',
+            zIndex: 2,
+            animation: 'fadeIn 3s ease'
           }}
         >
-          520 Loading...
+          520
         </div>
 
         <div
           style={{
             marginTop: '20px',
             color: '#ff4f87',
-            opacity: 0.7
+            opacity: 0.8,
+            zIndex: 2
           }}
         >
-          小比熊正在准备惊喜 ✨
+          小比熊正在准备最后的惊喜 ✨
         </div>
       </div>
     )
