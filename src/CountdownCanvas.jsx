@@ -23,6 +23,8 @@ export default function CountdownCanvas() {
     let lastSwitch = Date.now()
     let exploded = false
 
+    let lastFirework = Date.now()
+
     function createTargetPoints(number) {
       offCtx.clearRect(0, 0, offCanvas.width, offCanvas.height)
 
@@ -62,36 +64,47 @@ export default function CountdownCanvas() {
         ty: p.y,
         size: 14,
         text: '520',
-        color: Math.random() > 0.5
-          ? '#ff4f87'
-          : '#ffffff'
+        color: Math.random() > 0.5 ? '#ff4f87' : '#ffffff'
       }))
     }
 
-    function createFireworks() {
+    function createFireworks(centerX, centerY) {
+      const baseX = centerX ?? canvas.width / 2
+      const baseY = centerY ?? canvas.height / 2
+
       fireworks = []
 
       for (let i = 0; i < 180; i++) {
         fireworks.push({
-          x: canvas.width / 2,
-          y: canvas.height / 2,
-
+          x: baseX,
+          y: baseY,
           vx: (Math.random() - 0.5) * 12,
           vy: (Math.random() - 0.5) * 12,
-
           alpha: 1,
-
-          text: ['5', '2', '0'][
-            Math.floor(Math.random() * 3)
-          ],
-
+          text: ['5', '2', '0'][Math.floor(Math.random() * 3)],
           size: 18 + Math.random() * 10,
-
-          color: Math.random() > 0.5
-            ? '#ff4f87'
-            : '#ffffff'
+          color: Math.random() > 0.5 ? '#ff4f87' : '#ffffff'
         })
       }
+    }
+
+    function createSingleFirework(x, y) {
+      const arr = []
+
+      for (let i = 0; i < 40; i++) {
+        arr.push({
+          x,
+          y,
+          vx: (Math.random() - 0.5) * 10,
+          vy: (Math.random() - 0.5) * 10,
+          alpha: 1,
+          text: ['5', '2', '0'][Math.floor(Math.random() * 3)],
+          size: 14 + Math.random() * 8,
+          color: Math.random() > 0.5 ? '#ff4f87' : '#ffffff'
+        })
+      }
+
+      return arr
     }
 
     createTargetPoints(currentNumber)
@@ -100,6 +113,7 @@ export default function CountdownCanvas() {
       ctx.fillStyle = 'rgba(0,0,0,0.28)'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
+      // ========= 数字阶段 =========
       if (!exploded) {
         particles.forEach((p) => {
           p.x += (p.tx - p.x) * 0.06
@@ -116,18 +130,33 @@ export default function CountdownCanvas() {
 
           if (currentNumber <= 0) {
             exploded = true
-            createFireworks()
+
+            // 👉 第一次烟花：正中间
+            createFireworks(canvas.width / 2, canvas.height / 2)
           } else {
             createTargetPoints(currentNumber)
           }
 
           lastSwitch = Date.now()
         }
-      } else {
+      }
+
+      // ========= 烟花阶段 =========
+      else {
+        // 👉 持续随机烟花
+        if (Date.now() - lastFirework > 650) {
+          fireworks.push(
+            ...createSingleFirework(
+              Math.random() * canvas.width,
+              Math.random() * canvas.height
+            )
+          )
+          lastFirework = Date.now()
+        }
+
         fireworks.forEach((f) => {
           f.x += f.vx
           f.y += f.vy
-
           f.vy += 0.04
           f.alpha -= 0.01
 
