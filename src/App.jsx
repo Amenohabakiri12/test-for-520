@@ -2,6 +2,45 @@ import { useState } from 'react'
 
 export default function App() {
   const [opened, setOpened] = useState(false)
+  const [night, setNight] = useState(false)
+
+  if (night) {
+    return (
+      <div
+        style={{
+          background: 'black',
+          color: 'white',
+          width: '100vw',
+          height: '100vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'column',
+          overflow: 'hidden'
+        }}
+      >
+        <div
+          style={{
+            fontSize: '28px',
+            letterSpacing: '6px',
+            animation: 'fadeIn 2s ease'
+          }}
+        >
+          520 Loading...
+        </div>
+
+        <div
+          style={{
+            marginTop: '20px',
+            color: '#ff4f87',
+            opacity: 0.7
+          }}
+        >
+          小比熊正在准备惊喜 ✨
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div
@@ -91,7 +130,6 @@ export default function App() {
                 borderRadius: '999px',
                 fontSize: '18px',
                 cursor: 'pointer',
-                transition: '0.3s',
                 boxShadow: '0 6px 20px rgba(255,79,135,0.35)',
               }}
             >
@@ -148,6 +186,22 @@ export default function App() {
               <br />
               520快乐
             </p>
+
+            <button
+              onClick={() => setNight(true)}
+              style={{
+                marginTop: '30px',
+                border: 'none',
+                background: '#111',
+                color: 'white',
+                padding: '14px 28px',
+                borderRadius: '999px',
+                fontSize: '18px',
+                cursor: 'pointer',
+              }}
+            >
+              继续 →
+            </button>
           </div>
         )}
 
