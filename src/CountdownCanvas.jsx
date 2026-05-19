@@ -10,74 +10,110 @@ export default function CountdownCanvas() {
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
 
-    const particles = []
+    let particles = []
 
-    for (let i = 0; i < 500; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        speed: 2 + Math.random() * 4,
-        text: ['5', '2', '0'][Math.floor(Math.random() * 3)],
-        size: 18 + Math.random() * 10,
-        color: Math.random() > 0.5 ? '#ff4f87' : '#00ff99'
-      })
-    }
+    const offCanvas = document.createElement('canvas')
+    const offCtx = offCanvas.getContext('2d')
+
+    offCanvas.width = canvas.width
+    offCanvas.height = canvas.height
 
     let currentNumber = 5
-    let timer = 0
+    let lastSwitch = Date.now()
 
-    function drawBigNumber(num) {
-      ctx.save()
+    function createTargetPoints(number) {
+      offCtx.clearRect(0, 0, offCanvas.width, offCanvas.height)
 
-      ctx.font = 'bold 300px sans-serif'
-      ctx.textAlign = 'center'
-      ctx.fillStyle = 'rgba(255,255,255,0.08)'
+      offCtx.fillStyle = 'white'
+      offCtx.textAlign = 'center'
+      offCtx.font = 'bold 320px sans-serif'
 
-      ctx.fillText(
-        num,
-        canvas.width / 2,
-        canvas.height / 2 + 100
+      offCtx.fillText(
+        number,
+        offCanvas.width / 2,
+        offCanvas.height / 2 + 100
       )
 
-      ctx.restore()
+      const imageData = offCtx.getImageData(
+        0,
+        0,
+        offCanvas.width,
+        offCanvas.height
+      )
+
+      const points = []
+
+      for (let y = 0; y < imageData.height; y += 8) {
+        for (let x = 0; x < imageData.width; x += 8) {
+          const index = (y * imageData.width + x) * 4
+
+          if (imageData.data[index + 3] > 128) {
+            points.push({ x, y })
+          }
+        }
+      }
+
+      particles = points.map((p) => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        tx: p.x,
+        ty: p.y,
+        size: 14,
+        text: '520',
+        color: Math.random() > 0.5
+          ? '#ff4f87'
+          : '#ffffff'
+      }))
     }
+
+    createTargetPoints(currentNumber)
 
     function animate() {
       ctx.fillStyle = 'rgba(0,0,0,0.18)'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-      drawBigNumber(currentNumber)
-
       particles.forEach((p) => {
+        p.x += (p.tx - p.x) * 0.06
+        p.y += (p.ty - p.y) * 0.06
+
         ctx.fillStyle = p.color
         ctx.font = `${p.size}px sans-serif`
 
         ctx.fillText(p.text, p.x, p.y)
-
-        p.y += p.speed
-
-        if (p.y > canvas.height) {
-          p.y = -20
-          p.x = Math.random() * canvas.width
-        }
       })
 
-      timer++
-
-      if (timer > 180) {
+      if (Date.now() - lastSwitch > 1800) {
         currentNumber--
 
         if (currentNumber <= 0) {
           currentNumber = 5
         }
 
-        timer = 0
+        createTargetPoints(currentNumber)
+
+        lastSwitch = Date.now()
       }
 
       requestAnimationFrame(animate)
     }
 
     animate()
+
+    function resize() {
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+
+      offCanvas.width = canvas.width
+      offCanvas.height = canvas.height
+
+      createTargetPoints(currentNumber)
+    }
+
+    window.addEventListener('resize', resize)
+
+    return () => {
+      window.removeEventListener('resize', resize)
+    }
   }, [])
 
   return (
