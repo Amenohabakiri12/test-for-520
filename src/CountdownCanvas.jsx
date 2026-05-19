@@ -71,15 +71,22 @@ export default function CountdownCanvas() {
     function createFireworks() {
       fireworks = []
 
-      for (let i = 0; i < 260; i++) {
+      for (let i = 0; i < 180; i++) {
         fireworks.push({
           x: canvas.width / 2,
           y: canvas.height / 2,
-          vx: (Math.random() - 0.5) * 18,
-          vy: (Math.random() - 0.5) * 18,
+
+          vx: (Math.random() - 0.5) * 12,
+          vy: (Math.random() - 0.5) * 12,
+
           alpha: 1,
-          text: Math.random() > 0.7 ? '❤️' : '520',
-          size: 18 + Math.random() * 16,
+
+          text: ['5', '2', '0'][
+            Math.floor(Math.random() * 3)
+          ],
+
+          size: 18 + Math.random() * 10,
+
           color: Math.random() > 0.5
             ? '#ff4f87'
             : '#ffffff'
@@ -90,7 +97,7 @@ export default function CountdownCanvas() {
     createTargetPoints(currentNumber)
 
     function animate() {
-      ctx.fillStyle = 'rgba(0,0,0,0.18)'
+      ctx.fillStyle = 'rgba(0,0,0,0.28)'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
       if (!exploded) {
@@ -121,8 +128,8 @@ export default function CountdownCanvas() {
           f.x += f.vx
           f.y += f.vy
 
-          f.vy += 0.05
-          f.alpha -= 0.008
+          f.vy += 0.04
+          f.alpha -= 0.01
 
           ctx.globalAlpha = f.alpha
           ctx.fillStyle = f.color
