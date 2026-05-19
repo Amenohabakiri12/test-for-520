@@ -21,13 +21,13 @@ export default function App() {
         }}
       >
         <div className="matrix">
-          {Array.from({ length: 120 }).map((_, i) => (
+          {Array.from({ length: 320 }).map((_, i) => (
             <span
               key={i}
               style={{
                 left: `${Math.random() * 100}%`,
-                animationDuration: `${3 + Math.random() * 5}s`,
-                animationDelay: `${Math.random() * 5}s`,
+                animationDuration: `${2 + Math.random() * 4}s`,
+                animationDelay: `${Math.random() * 3}s`,
                 color: Math.random() > 0.5 ? '#ff4f87' : '#00ff99'
               }}
             >
@@ -42,7 +42,8 @@ export default function App() {
             fontWeight: 'bold',
             letterSpacing: '10px',
             zIndex: 2,
-            animation: 'fadeIn 3s ease'
+            animation: 'fadeIn 3s ease',
+            textShadow: '0 0 20px #ff4f87'
           }}
         >
           520
@@ -52,8 +53,9 @@ export default function App() {
           style={{
             marginTop: '20px',
             color: '#ff4f87',
-            opacity: 0.8,
-            zIndex: 2
+            opacity: 0.9,
+            zIndex: 2,
+            letterSpacing: '2px'
           }}
         >
           小比熊正在准备最后的惊喜 ✨
