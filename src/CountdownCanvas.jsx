@@ -11,6 +11,7 @@ export default function CountdownCanvas() {
     canvas.height = window.innerHeight
 
     let particles = []
+    let fireworks = []
 
     const offCanvas = document.createElement('canvas')
     const offCtx = offCanvas.getContext('2d')
@@ -20,6 +21,7 @@ export default function CountdownCanvas() {
 
     let currentNumber = 5
     let lastSwitch = Date.now()
+    let exploded = false
 
     function createTargetPoints(number) {
       offCtx.clearRect(0, 0, offCanvas.width, offCanvas.height)
@@ -66,32 +68,80 @@ export default function CountdownCanvas() {
       }))
     }
 
+    function createFireworks() {
+      fireworks = []
+
+      for (let i = 0; i < 260; i++) {
+        fireworks.push({
+          x: canvas.width / 2,
+          y: canvas.height / 2,
+          vx: (Math.random() - 0.5) * 18,
+          vy: (Math.random() - 0.5) * 18,
+          alpha: 1,
+          text: Math.random() > 0.7 ? '❤️' : '520',
+          size: 18 + Math.random() * 16,
+          color: Math.random() > 0.5
+            ? '#ff4f87'
+            : '#ffffff'
+        })
+      }
+    }
+
     createTargetPoints(currentNumber)
 
     function animate() {
       ctx.fillStyle = 'rgba(0,0,0,0.18)'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-      particles.forEach((p) => {
-        p.x += (p.tx - p.x) * 0.06
-        p.y += (p.ty - p.y) * 0.06
+      if (!exploded) {
+        particles.forEach((p) => {
+          p.x += (p.tx - p.x) * 0.06
+          p.y += (p.ty - p.y) * 0.06
 
-        ctx.fillStyle = p.color
-        ctx.font = `${p.size}px sans-serif`
+          ctx.fillStyle = p.color
+          ctx.font = `${p.size}px sans-serif`
 
-        ctx.fillText(p.text, p.x, p.y)
-      })
+          ctx.fillText(p.text, p.x, p.y)
+        })
 
-      if (Date.now() - lastSwitch > 1800) {
-        currentNumber--
+        if (Date.now() - lastSwitch > 1800) {
+          currentNumber--
 
-        if (currentNumber <= 0) {
-          currentNumber = 5
+          if (currentNumber <= 0) {
+            exploded = true
+            createFireworks()
+          } else {
+            createTargetPoints(currentNumber)
+          }
+
+          lastSwitch = Date.now()
         }
+      } else {
+        fireworks.forEach((f) => {
+          f.x += f.vx
+          f.y += f.vy
 
-        createTargetPoints(currentNumber)
+          f.vy += 0.05
+          f.alpha -= 0.008
 
-        lastSwitch = Date.now()
+          ctx.globalAlpha = f.alpha
+          ctx.fillStyle = f.color
+          ctx.font = `${f.size}px sans-serif`
+
+          ctx.fillText(f.text, f.x, f.y)
+        })
+
+        ctx.globalAlpha = 1
+
+        ctx.fillStyle = '#ffffff'
+        ctx.textAlign = 'center'
+        ctx.font = 'bold 54px sans-serif'
+
+        ctx.fillText(
+          '520快乐 ❤️',
+          canvas.width / 2,
+          canvas.height * 0.82
+        )
       }
 
       requestAnimationFrame(animate)
@@ -106,7 +156,9 @@ export default function CountdownCanvas() {
       offCanvas.width = canvas.width
       offCanvas.height = canvas.height
 
-      createTargetPoints(currentNumber)
+      if (!exploded) {
+        createTargetPoints(currentNumber)
+      }
     }
 
     window.addEventListener('resize', resize)
