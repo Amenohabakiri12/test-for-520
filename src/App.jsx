@@ -3,6 +3,7 @@ import { useState } from 'react'
 export default function App() {
   const [opened, setOpened] = useState(false)
   const [night, setNight] = useState(false)
+  const [showBig520, setShowBig520] = useState(false)
 
   if (night) {
     return (
@@ -36,18 +37,25 @@ export default function App() {
           ))}
         </div>
 
-        <div
-          style={{
-            fontSize: '72px',
-            fontWeight: 'bold',
-            letterSpacing: '10px',
-            zIndex: 2,
-            animation: 'fadeIn 3s ease',
-            textShadow: '0 0 20px #ff4f87'
-          }}
-        >
-          520
-        </div>
+        {showBig520 && (
+          <div
+            style={{
+              fontSize: '120px',
+              fontWeight: 'bold',
+              letterSpacing: '14px',
+              zIndex: 2,
+              animation: 'big520 2s ease',
+              textShadow: `
+                0 0 20px #ff4f87,
+                0 0 40px #ff4f87,
+                0 0 80px #ff4f87
+              `,
+              color: '#fff'
+            }}
+          >
+            520
+          </div>
+        )}
 
         <div
           style={{
@@ -210,7 +218,13 @@ export default function App() {
             </p>
 
             <button
-              onClick={() => setNight(true)}
+              onClick={() => {
+                setNight(true)
+
+                setTimeout(() => {
+                  setShowBig520(true)
+                }, 5000)
+              }}
               style={{
                 marginTop: '30px',
                 border: 'none',
